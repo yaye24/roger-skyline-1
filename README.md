@@ -9,7 +9,7 @@ Sujet d’initiation à l’Administration Système et Réseau.
 
   Le sujet nous demande d'utiliser Linux, un **système d'exploitation** (OS ou Operating System en anglais) au même titre que Windows ou Mac OS utilisé à 42. Comme c'est interdit de bidouiller les ordis pour changer l'OS, on passe par l'installation d'une **machine virtuelle** (VM ou Virtual Machine en anglais). Une machine virtuelle fonctionne comme une machine réelle (exemple: un ordinateur) mais n'existe pas physiquement, ça ressemble aux émulateurs de consoles pour ceux qui connaissent, mais là ce serait un émulateur d'OS. L'intérêt c'est de pouvoir choisir l'OS qu'on veut en plus de pouvoir travailler avec un environnement vierge.
 
-## Installer la VM
+## Création de la VM
 
   On utilise Virtual Box pour créer notre VM (la machine) et on va installer dessus la version **Debian (64-bits)** de Linux (l'OS).
   
@@ -51,7 +51,7 @@ Sujet d’initiation à l’Administration Système et Réseau.
 
   5) Graphical install
   
-     Langue, Location = US, Keyboard
+     Langue, Location, Keyboard
      
      Hostname = <nom_de_serveur>
      
@@ -73,6 +73,28 @@ Sujet d’initiation à l’Administration Système et Réseau.
      
      Finish et on laisse blanc/par défaut jusqu'à _Install the GRUB boot loader_ -> Yes -> /dev/sda
   
-  Linux est maintenant installé sur notre VM.
+     Linux est maintenant installé sur notre VM. Entrer Login = root et Password = toor.
      
- 
+Installer sudo avec:
+     
+    apt install sudo
+
+Sudo permet aux utilisateurs non root d'utiliser des commandes admins (par ex: sudo adduser new_user). Pour que ça marche il faut que l'utilisateur non root soit ajouté dans la liste des utilisateurs sudo.
+     
+ ## Partie Réseau et Sécurité
+ ### Utilisateur et droits admins
+  Créer un nouvel utilisateur:
+  
+    adduser <new_user>
+    
+  Lorsqu'un nouvel utilisateur est créé, un dossier à son nom est créé dans /home/<new_user>
+    
+  Ajouter le dans la liste des utilisateurs sudo:
+  
+    adduser <new_user> sudo
+    
+  _**REMARQUE**_: pour supprimer un utilisateur ET son dossier de /home, on utilise: _deluser --remove-home_
+  
+  
+    
+  
