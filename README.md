@@ -14,12 +14,10 @@ Sujet d’initiation à l’Administration Système et Réseau.
   On utilise Virtual Box pour créer notre VM (la machine) et on va installer dessus la version **Debian (64-bits)** de Linux (l'OS).
   
   ![alt text](https://upload.wikimedia.org/wikipedia/commons/d/d5/Virtualbox_logo.png)
- 
-  1) Télécharger l'image disque (.iso) de Debian 64-bits: https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-10.5.0-amd64-netinst.iso
-  
-  2) Ouvrir Virtual Box, cliquer sur New
-  
-  3) Choisir le <nom_de_la_machine>, définir le dossier dans lequel sera installé la VM /sgoinfre/goinfre/Perso/<login>
+
+  1) Ouvrir Virtual Box, cliquer sur New
+
+  2) Choisir le <nom_de_la_machine>, dossier où sera installé la VM = /sgoinfre/goinfre/Perso/<login>
   
      Type = Linux et Version = Debian (64-bits)
   
@@ -27,12 +25,56 @@ Sujet d’initiation à l’Administration Système et Réseau.
      
      Create a virtual hard disk now
      
-     VDI
+     VDI (VirtualBox Disk Image)
      
      Dynamically allocated
      
-     Virtual hard disk size = 7.46
+     Virtual hard disk size = 7.46GB (En fait ce ne sont pas des GB mais des GiB et 7.46GiB ~ 8.00GB).
+     
+     Voilà, notre VM existe virtuellement, avant de la lancer on va régler les configs.
   
+  4) Clique droit sur <nom_de_la_machine> puis Settings.
   
+     Onglet _System_, décocher _Floppy_ et le mettre en dessous de _Optical_ et _Hard Disk_ (cette manip' permet de ne pas à avoir à réinstaller Debian à chaque fois qu'on démarre notre VM.
+     
+     Onglet _Display_, _Scale Factor_ à 150% (pour avoir un écran plus grand).
+     
+     Onglet _Storage_, cliquer sur _Empty_ puis à droite le petit rond bleu et _Choose Virtual Optical Disk File_.
+     
+     Donner le chemin vers l'**image disque** (.iso) de Debian 64-bits qu'on télécharge ici: https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-10.5.0-amd64-netinst.iso
+     
+     L'image disque c'est comme un disque d'installation Debian, mais version virtuelle et comme notre VM, il n'existe pas physiquement.
+     
+     Onglet _Network_, Attached to = Bridged Adapter (c'est pour avoir accès à Internet sur notre VM grace à notre machine réelle).
+  
+     C'est finit pour les réglages, on peut lancer la VM avec _Start_
+
+  5) Graphical install
+  
+     Langue = English, Location = US, Keyboard = US
+     
+     Hostname = <nom_de_serveur>
+     
+     Domain name = <nom_de_serveur>.com
+     
+     Root password = toor (Root c'est le nom de l'utilisateur suprême, il a tous les droits)
+     
+     Entrer <nom_user> avec son <mdp_user>
+     
+     Partitioning method = Manual
+     
+     SCSI2 (...) -> Create new empty partition
+     
+     Dans le nouveau FREE SPACE -> Create a new partition -> 4.2 GB -> Primary -> Beginning -> Done setting up the partition
+     
+     FREE SPACE -> " -> 2.8 GB -> Logical -> End -> Done
+     
+     FREE SPACE -> " -> 1.0 GB -> Logical -> End -> Use as = Swap area -> Done
+     
+     Finish 
+     
+     
+     
+     
 
 ## Glossaire
