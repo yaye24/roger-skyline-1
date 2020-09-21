@@ -6,7 +6,7 @@ Sujet d’initiation à l’Administration Système et Réseau.
 ## Introduction
 
   Le but est de s'initier aux bases l'administration système et réseau. Pour ça on va créer notre serveur à partir de 0.
-  
+
   Le sujet nous demande d'utiliser Linux, un **système d'exploitation** (OS ou Operating System en anglais) au même titre que Windows ou Mac OS utilisé à 42. Comme c'est interdit de bidouiller les ordis pour changer l'OS, on passe par l'installation d'une **machine virtuelle** (VM ou Virtual Machine en anglais). Une machine virtuelle fonctionne comme une machine réelle (exemple: un ordinateur) mais n'existe pas physiquement, ça ressemble aux émulateurs de consoles pour ceux qui connaissent, mais là ce serait un émulateur d'OS. L'intérêt c'est de pouvoir choisir l'OS qu'on veut en plus de pouvoir travailler avec un environnement vierge.
 
 ## Installer la VM
@@ -31,7 +31,7 @@ Sujet d’initiation à l’Administration Système et Réseau.
      
      Virtual hard disk size = 7.46GB (En fait ce ne sont pas des GB mais des GiB et 7.46GiB ~ 8.00GB).
      
-     Voilà, notre VM existe virtuellement, avant de la lancer on va régler les configs.
+     Voilà, notre VM existe virtuellement mais avant de la lancer on va régler les configs.
   
   4) Clique droit sur <nom_de_la_machine> puis Settings.
   
@@ -47,11 +47,11 @@ Sujet d’initiation à l’Administration Système et Réseau.
      
      Onglet _Network_, Attached to = Bridged Adapter (c'est pour avoir accès à Internet sur notre VM grace à notre machine réelle).
   
-     C'est finit pour les réglages, on peut lancer la VM avec _Start_
+     Les réglages c'est ok, on peut maintenant lancer la VM avec _Start_
 
   5) Graphical install
   
-     Langue = English, Location = US, Keyboard = US
+     Langue, Location = US, Keyboard
      
      Hostname = <nom_de_serveur>
      
@@ -65,16 +65,14 @@ Sujet d’initiation à l’Administration Système et Réseau.
      
      SCSI2 (...) -> Create new empty partition
      
-     Dans le nouveau FREE SPACE -> Create a new partition -> 4.2 GB -> Primary -> Beginning -> Done setting up the partition
+     FREE SPACE -> Create a new partition -> 4.2 GB -> Primary -> Beginning -> Done setting up the partition
      
-     FREE SPACE -> " -> 2.8 GB -> Logical -> End -> Done
+     FREE SPACE -> Create a new partition -> 2.8 GB -> Logical -> End -> Done setting up the partition
      
-     FREE SPACE -> " -> 1.0 GB -> Logical -> End -> Use as = Swap area -> Done
+     FREE SPACE -> Create a new partition -> 1.0 GB -> Logical -> End -> Use as = Swap area -> Done setting up the partition
      
-     Finish 
+     Finish et on laisse blanc/par défaut jusqu'à _Install the GRUB boot loader_ -> Yes -> /dev/sda
+  
+  Linux est maintenant installé sur notre VM.
      
-     
-     
-     
-
-## Glossaire
+ 
