@@ -143,7 +143,7 @@ On installe les packages suivants:
             netmask 255.255.255.252
             gateway 10.11.254.254
 
-  Pour l'adresse IP, on met l'IP qu'on obtient avec la commande _ip addr_. De même pour la **gateway** (c'est l'intermédiaire entre 2 réseaux, ici le réseau local de 42 et Internet) avec _netstat -nr_ sur notre machine réelle.
+  Pour l'adresse IP, on met l'IP qu'on obtient avec la commande _ip addr_. De même pour la **gateway** avec _netstat -nr_ sur notre machine réelle. La **gateway** est l'intermédiaire entre 2 réseaux, ici le réseau local de 42 et Internet.
 
   Puis on relance le service réseau de VM:
   
