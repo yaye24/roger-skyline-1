@@ -217,6 +217,12 @@ On installe les packages suivants:
     
 ## Se protéger des attaques DoS (Denial of Service)
   Le **DoS** est une attaque qui a pour but de ralentir ou mettre hors service une machine ou un réseau. Ça se fait en noyant sa cible de requête, celle-ci ralentit à cause du trop grand nombre de requête jusqu'à crash.
+  
+  1) `fail2ban` va se charger de détecter ces attaques:
+    
+    sudo apt install fail2ban
+    
+  2) 
     
 
     
