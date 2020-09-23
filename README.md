@@ -82,20 +82,20 @@ On installe les packages suivants:
      
     sudo apt install sudo vim net-tools
 
-**sudo** permet aux utilisateurs non root d'utiliser des commandes admins (par ex: _sudo adduser new_user_). Pour que ça marche il faut que l'utilisateur non root soit ajouté dans la liste des utilisateurs sudo.
+**sudo** permet aux utilisateurs non root d'utiliser des commandes admins (par ex: `sudo adduser new_user`). Pour que ça marche il faut que l'utilisateur non root soit ajouté dans la liste des utilisateurs sudo.
 
-**net-tools** contient les commandes réseaux tel que _netstat_ pour lister la table de routage.
+**net-tools** contient les commandes réseaux tel que `netstat` pour lister la table de routage.
 
 ## Nouvel utilisateur et droits admin
   1) Créer un nouvel utilisateur:
   
-    sudo adduser <new_user>
+    sudo adduser nom_utilisateur
     
-  Lorsqu'un nouvel utilisateur est créé, un dossier à son nom est créé dans _/home/<new_user>_. La liste des utilisateurs existants se trouve dans _/etc/passwd_.
+  Lorsqu'un nouvel utilisateur est créé, un dossier à son nom est créé dans _/home/nom_utilisateur_. La liste des utilisateurs existants se trouve dans _/etc/passwd_.
   
   2) Ajouter le dans la liste des utilisateurs sudo:
   
-    sudo adduser <new_user> sudo
+    sudo adduser nom_utilisateur sudo
   
   On peut aussi l'ajouter directement dans le fichier _/etc/sudoers_ avec vim.
 
@@ -117,13 +117,13 @@ On installe les packages suivants:
   
   Comme c'est une succession de 1 puis de 0, on peut définir un netmask par sa longueur; càd le nombre de 1 qu'il y a avant qu'il n'y ait que des 0). Cette longueur varie de 0 à 32 (4 octets * 8 bits).
 
-  L'adresse qu'on affiche avec _ip addr_ correspond à notre adresse privée; c'est le chemin entre la VM et le réseau (privée) de l'école. Elle est attribuée automatiquement par le service DHCP du réseau de l'école.
+  L'adresse qu'on affiche avec `ip addr` correspond à notre adresse privée; c'est le chemin entre la VM et le réseau (privée) de l'école. Elle est attribuée automatiquement par le service DHCP du réseau de l'école.
   
-  On va configurer la VM pour fixer son adresse IP et lui attribuer un netmask de 30:
+  1) On va configurer la VM pour fixer son adresse IP et lui attribuer un netmask de 30:
   
     sudo vim /etc/network/interfaces
     
-  Dans le fichier, on modifie:
+  2) Dans ce fichier `/etc/network/interfaces`, on modifie:
     
     allow-hotplug enp0s3
     face enp0s3 inet dhcp
@@ -132,51 +132,53 @@ On installe les packages suivants:
   
     auto enp0s3
 
-  Puis on crée le fichier enp0s3:
+  3) Puis on crée le fichier enp0s3:
   
     sudo vim /etc/network/interfaces.d/enp0s3
     
-  Dans lequel on écrit:
+  4) Dans lequel on écrit:
   
     iface enp0s3 inet static
             address 10.11.200.90
             netmask 255.255.255.252
             gateway 10.11.254.254
 
-  Pour l'adresse IP, on met l'IP qu'on obtient avec la commande _ip addr_. De même pour la **gateway** avec _netstat -nr_ sur notre machine réelle. La **gateway** est l'intermédiaire entre 2 réseaux, ici le réseau local de 42 et Internet.
+  Pour l'adresse IP, on met l'IP qu'on obtient avec la commande `ip addr`. De même pour la **gateway** avec `netstat -nr` sur notre machine réelle. La **gateway** est l'intermédiaire entre 2 réseaux, ici le réseau local de 42 et Internet.
 
-  Puis on relance le service réseau de VM:
+  5) Enfin on relance le service réseau de VM:
   
     service networking restart
     
   On peut vérifier le changement avec _ip addr_ et notre adress IP devrait être _10.11.200.90/30_.
   
 ## Service SSH
-  SSH est un service de connexion à distance d'une machine à une autre. Par défaut ce service se fait à travers le **port 22**. Pour le modifier:
+  1) SSH est un service de connexion à distance d'une machine à une autre. Par défaut ce service se fait à travers le **port 22**. Pour le modifier:
   
     sudo vim /etc/ssh/sshd_config
   
-  On décommente et on change le numéro de port:
+  On décommente et on change le numéro de port (libre au choix mais il faut rester cohérent pour la suite):
   
     Port 55555
     
-  On relance le service SSH de la VM:
+  2) On relance le service SSH de la VM:
   
     service ssh restart
     
-  À partir de là, on peut se connecter à notre VM avec (dans un terminal de notre machine réelle):
+  3) On se connecte à notre VM avec (à partir d'un terminal de notre machine réelle):
   
-    ssh root@10.11.200.90 -p 55555
+    ssh nom_utilisateur@10.11.200.90 -p 55555
+    
+  Il faut maintenant configurer la connexion SSH par clé et interdire la connexion en tant que _root_.
   
-  On ouvre un 2ème terminal et dans ~/.ssh on génère une paire de clé SSH:
+  4) On ouvre un 2ème terminal et dans ~/.ssh on génère une paire de clé SSH:
   
     ssh-keygen
     
-  On copie la clé publique générée et on la donne:
+  5) On copie la clé publique générée et on la donne:
   
     ssh-copy-id -i ~/.ssh/id_rsa.pub <user>@10.11.200.233 -p 55555
   
-  Dans la VM, on active l'authentification par publickeys:
+  6) Sur la VM, dans `/etc/ssh/sshd_config`, on active l'authentification par publickeys:
     
     PubkeyAuthentication yes
     
@@ -185,8 +187,38 @@ On installe les packages suivants:
     PasswordAuthentication no  
     PermitRootLogin no
     
+  Enfin on `service ssh restart` pour confirmer les changements.
+    
 ## Firewall
-   
+  Le **firewall** est un ensemble de règles qui va controller le trafic entrant ou sortant de la machine sur laquelle il est mis en place. L'intérêt principal étant de protéger la machine, il peut être aussi utilisé pour le NAT ou ajustement de bande passante. _(source: https://wiki.debian.org/DebianFirewall)_
+
+  Ces règles sont définies par la commande `iptables`. Son utilisation n'est pas facile si on n'est pas familiarisé avec, donc on va utiliser la commande `ufw`.
+
+  1) `ufw` s'utilise avec une syntax plus naïve et réalise les commandes `iptables` "à notre place".
+
+    sudo apt install ufw
+    
+  2) On l'active:
+  
+    ufw enable
+    
+  3) On initialise (interdiction d'entrer, libre de sortir):
+  
+    ufw default deny incoming
+    ufw default allow outgoing
+    
+  4) On autorise la connexion SSH (ici, port 55555):
+  
+    ufw allow 55555
+    
+  5) Enfin:
+  
+    service ufw restart
+    
+## Se protéger des attaques DoS (Denial of Service)
+  Le **DoS** est une attaque qui a pour but de ralentir ou mettre hors service une machine ou un réseau. Ça se fait en noyant sa cible de requête, celle-ci ralentit à cause du trop grand nombre de requête jusqu'à crash.
+    
+
     
     
   
