@@ -211,7 +211,7 @@ On installe les packages suivants:
   
     ufw allow 55555
     
-  5) Enfin:
+  5) On restart:
   
     service ufw restart
     
@@ -222,7 +222,19 @@ On installe les packages suivants:
     
     sudo apt install fail2ban
     
-  2) 
+  2) Ouvrir `/etc/fail2ban/jail.d/defaults-debian.conf`:
+    
+    [sshd]
+    enabled = true
+    bantime = 60
+    findtime = 600
+    maxretry = 5
+    
+  3) On restart:
+  
+    service fail2ban restart
+    
+## Se protéger des scans de ports
     
 
     
