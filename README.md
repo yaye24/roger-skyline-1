@@ -123,7 +123,7 @@ On installe les packages suivants:
   
     sudo vim /etc/network/interfaces
     
-  2) Dans ce fichier `/etc/network/interfaces`, on modifie:
+  2) Dans ce fichier _/etc/network/interfaces_, on modifie:
     
     allow-hotplug enp0s3
     face enp0s3 inet dhcp
@@ -159,7 +159,9 @@ On installe les packages suivants:
   On décommente et on change le numéro de port (libre au choix mais il faut rester cohérent pour la suite):
   
     Port 55555
-    
+  
+  Un **port** dans un réseau désigne une entrée pour communiquer avec celui-ci. Chaque moyen de communication (SSH, TCP, ...) est attribué un port différent.
+  
   2) On relance le service SSH de la VM:
   
     service ssh restart
@@ -222,22 +224,41 @@ On installe les packages suivants:
     
     sudo apt install fail2ban
     
-  2) Ouvrir `/etc/fail2ban/jail.d/defaults-debian.conf`:
+  2) Dans _/etc/fail2ban/jail.local_:
     
     [sshd]
     enabled = true
     bantime = 60
     findtime = 600
-    maxretry = 5
+    maxretry = 3
     
   3) On restart:
   
     service fail2ban restart
     
 ## Se protéger des scans de ports
+   Le **scan de ports** consiste à intérroger les différents ports d'un serveur pour savoir ceux qui sont ouverts et donc potentiellement exploiter ces entrées. 
+   
+  1) On utilise `portsentry`
+   
+    sudo apt install portsentry
     
+  2) Dans _/etc/default/portsentry_:
+  
+    TCP_MODE="atcp"
+    UDP_MODE="audp"
+    
+  3) Dans _/etc/portsentry/_:
+    
+    BLOCK_UDP="1"
+    BLOCK_TCP="1"
 
+    #Décommenter
+    KILL_ROUTE="/sbin/iptables -I INPUT -s $TARGET$ -j DROP"
     
+    #Commenter tous les autres `KILL_ROUTE`.
+  
+  4) `service portsentry restart`
     
   
   
