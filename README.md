@@ -202,12 +202,12 @@ On installe les packages suivants:
   
     ufw enable
     
-  3) On initialise (interdiction d'entrer, libre de sortir):
+  3) On initialise:
   
     ufw default deny incoming
     ufw default allow outgoing
     
-  4) On autorise la connexion SSH (ici, port 55555):
+  4) On autorise la connexion SSH (ici port 55555):
   
     ufw allow 55555
     
