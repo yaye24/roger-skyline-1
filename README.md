@@ -126,7 +126,7 @@ On installe les packages suivants:
   2) Dans ce fichier _/etc/network/interfaces_, on modifie:
     
     allow-hotplug enp0s3
-    face enp0s3 inet dhcp
+    iface enp0s3 inet dhcp
     
   Par:
   
