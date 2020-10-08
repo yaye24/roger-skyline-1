@@ -294,23 +294,27 @@ On installe les packages suivants:
     0 4     * * 1   root    sh /root/update.sh
     #
 
-  3) Enfin un script  qui permet de surveiller les modifications du fichier /etc/crontab et envoie un mail à root si celui-ci a été modifié.
+  3) Enfin un script cron_check.sh qui permet de surveiller les modifications du fichier /etc/crontab et envoie un mail à root si celui-ci a été modifié.
   
     #!/bin/bash
     CRON=/etc/crontab
-    CRONHASH=/var/tmp/cron_hash
-    if [ -f $CRON ]; then
-      if [ -f $CRONHASH ]; then
-        if [ "$(cat $CRONHASH)" != "$(md5sum $CRON)" ]; then
-          echo "$CRON was modified" | mail -s "cronCheck report" root@roger
+    CTMP=/var/tmp/crontmp
+    if [ -f $CRON ]
+    then
+      if [ -f $CTMP ]
+      then
+        if [ "$(md5sum $CRON)" != "$(cat $CTMP)" ]
+        then
+          echo "$CRON a été modifié" | mail -s "Rapport cron_check.sh" root@roger-skyline-1.com
         fi
+      else
+        md5sum $CRON > $CTMP
       fi
-    md5sum $CRON > $CRONHASH
     fi
     
   4) Et le rajouter dans /etc/crontab
   
-    0 0     * * *   root    sh /root/test_script.sh
+    0 0     * * *   root    sh /root/cron_check.sh
     
 
 
