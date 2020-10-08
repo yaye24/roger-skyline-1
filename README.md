@@ -262,7 +262,9 @@ On installe les packages suivants:
     
   ## Scripts
   
-  1) Premièrement, un script qui met à jour l’ensemble des sources de package, puis des packages et qui log l’ensemble dans un fichier nommé /var/log/update_script.log.
+  Les deux scripts seront à la racine `/root/`.
+  
+  1) D'abord, un script update.sh qui met à jour l’ensemble des sources de package, puis des packages et qui log l’ensemble dans un fichier nommé /var/log/update_script.log.
   
     #!/bin/bash
     LOG=/var/log/update_script.log
@@ -288,13 +290,27 @@ On installe les packages suivants:
     # |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
     # |  |  |  |  |
     # *  *  *  *  * user-name command to be executed
-    @reboot         root    sh /root/update_package.sh
-    0 4     * * 1   root    sh /root/update_package.sh
-    0 0     * * *   root    sh /root/watch_script.sh
+    @reboot         root    sh /root/update.sh
+    0 4     * * 1   root    sh /root/update.sh
     #
 
-  3) Enfin un script qui permet de surveiller les modifications du fichier /etc/crontab et envoie un mail à root si celui-ci a été modifié.
+  3) Enfin un script  qui permet de surveiller les modifications du fichier /etc/crontab et envoie un mail à root si celui-ci a été modifié.
   
-  
+    #!/bin/bash
+    CRON=/etc/crontab
+    CRONHASH=/var/tmp/cron_hash
+    if [ -f $CRON ]; then
+      if [ -f $CRONHASH ]; then
+        if [ "$(cat $CRONHASH)" != "$(md5sum $CRON)" ]; then
+          echo "$CRON was modified" | mail -s "cronCheck report" root@roger
+        fi
+      fi
+    md5sum $CRON > $CRONHASH
+    fi
     
+  4) Et le rajouter dans /etc/crontab
   
+    0 0     * * *   root    sh /root/test_script.sh
+    
+
+
