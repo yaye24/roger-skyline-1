@@ -237,9 +237,9 @@ On installe les packages suivants:
     service fail2ban restart
     
 ## Se protéger des scans de ports
-   Le **scan de ports** consiste à intérroger les différents ports d'un serveur pour savoir ceux qui sont ouverts et donc potentiellement exploiter ces entrées. 
+   Le **scan de ports** consiste à interroger les différents ports d'un serveur. Une réponse témoigne l'accessibilité d'un port et donc de la possibilité d'exploiter cette entrée.
    
-  1) On utilise `portsentry`
+  1) On utilise `portsentry` un programme qui détecte et bloque les scans de ports.
    
     sudo apt install portsentry
     
@@ -260,8 +260,40 @@ On installe les packages suivants:
   
   4) `service portsentry restart`
     
+  ## Scripts
   
+  1) Premièrement, un script qui met à jour l’ensemble des sources de package, puis des packages et qui log l’ensemble dans un fichier nommé /var/log/update_script.log.
   
+    #!/bin/bash
+    LOG=/var/log/update_script.log
+    apt-get update -y >> $LOG
+    apt-get upgrade -y >> $LOG
+    
+  2) On planifie l'exécution du script une fois par semaine à 4h00 du matin et à chaque reboot. Dans /etc/crontab
+  
+    # /etc/crontab: system-wide crontab
+    # Unlike any other crontab you don't have to run the `crontab'
+    # command to install the new version when you edit this file
+    # and files in /etc/cron.d. These files also have username fields,
+    # that none of the other crontabs do.
+
+    SHELL=/bin/sh
+    PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+    # Example of job definition:
+    # .---------------- minute (0 - 59)
+    # |  .------------- hour (0 - 23)
+    # |  |  .---------- day of month (1 - 31)
+    # |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+    # |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+    # |  |  |  |  |
+    # *  *  *  *  * user-name command to be executed
+    @reboot         root    sh /root/update_package.sh
+    0 4     * * 1   root    sh /root/update_package.sh
+    0 0     * * *   root    sh /root/watch_script.sh
+    #
+
+  3) Enfin un script qui permet de surveiller les modifications du fichier /etc/crontab et envoie un mail à root si celui-ci a été modifié.
   
   
     
