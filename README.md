@@ -147,7 +147,7 @@ On installe les packages suivants:
 
   5) Enfin on relance le service réseau de VM:
   
-    service networking restart
+    sudo service networking restart
     
   On peut vérifier le changement avec _ip addr_ et notre adress IP devrait être _10.11.200.90/30_.
   
@@ -164,7 +164,7 @@ On installe les packages suivants:
   
   2) On relance le service SSH de la VM:
   
-    service ssh restart
+    sudo service ssh restart
     
   3) On se connecte à notre VM avec (à partir d'un terminal de notre machine réelle):
   
@@ -189,7 +189,7 @@ On installe les packages suivants:
     PasswordAuthentication no  
     PermitRootLogin no
     
-  Enfin on `service ssh restart` pour confirmer les changements.
+  Enfin on `sudo service ssh restart` pour confirmer les changements.
     
 ## Firewall
   Le **firewall** est un ensemble de règles qui va controller le trafic entrant ou sortant de la machine sur laquelle il est mis en place. L'intérêt principal étant de protéger la machine, il peut être aussi utilisé pour le NAT ou ajustement de bande passante. _(source: https://wiki.debian.org/DebianFirewall)_
@@ -215,7 +215,7 @@ On installe les packages suivants:
     
   5) On restart:
   
-    service ufw restart
+    sudo service ufw restart
     
 ## Se protéger des attaques DoS (Denial of Service)
   Le **DoS** est une attaque qui a pour but de ralentir ou mettre hors service une machine ou un réseau. Ça se fait en noyant sa cible de requêtes, celle-ci ralentit à cause du trop grand nombre de requêtes jusqu'à crash.
@@ -234,7 +234,7 @@ On installe les packages suivants:
     
   3) On restart:
   
-    service fail2ban restart
+    sudo service fail2ban restart
     
 ## Se protéger des scans de ports
    Le **scan de ports** consiste à interroger les différents ports d'un serveur. Une réponse témoigne l'accessibilité d'un port et donc de la possibilité d'exploiter cette entrée.
@@ -291,7 +291,7 @@ On installe les packages suivants:
     # |  |  |  |  |
     # *  *  *  *  * user-name command to be executed
     @reboot         root    sh /root/update.sh
-    0 4     * * 1   root    sh /root/update.sh
+    0 4 * * 1       root    sh /root/update.sh
     #
 
   3) Enfin un script cron_check.sh qui permet de surveiller les modifications du fichier /etc/crontab et envoie un mail à root si celui-ci a été modifié.
@@ -305,16 +305,19 @@ On installe les packages suivants:
       then
         if [ "$(md5sum $CRON)" != "$(cat $CTMP)" ]
         then
-          echo "$CRON a été modifié" | mail -s "Rapport cron_check.sh" root@roger-skyline-1.com
+          echo "$CRON A ETE MODIFIE" | mail -s "RAPPORT cron_check.sh" root@roger-skyline-1.com
         fi
-      else
         md5sum $CRON > $CTMP
       fi
     fi
     
   4) Et le rajouter dans /etc/crontab
   
-    0 0     * * *   root    sh /root/cron_check.sh
+    0 0 * * *       root    sh /root/cron_check.sh
+    
+  5) On confirme les changements
+  
+    sudo service cron restart
     
 
 
