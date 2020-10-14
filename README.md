@@ -258,7 +258,7 @@ On installe les packages suivants:
     
     #Commenter tous les autres `KILL_ROUTE`.
   
-  4) `service portsentry restart`
+  4) `sudo service portsentry restart`
     
   ## Scripts
   
